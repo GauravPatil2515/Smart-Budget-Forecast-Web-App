@@ -6,98 +6,123 @@
 <title>Smart Budget Forecast</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#060b14;color:#c9d1d9;min-height:100vh}
-.hero{text-align:center;padding:40px 20px 30px;background:linear-gradient(180deg,#0d1525 0%,#060b14 100%)}
-.logo{font-size:42px;margin-bottom:8px}
-h1{font-size:2em;color:#58a6ff;font-weight:700;letter-spacing:-0.5px}
-h1 span{color:#4fc3f7}
-.sub{color:#8b949e;margin-top:6px;font-size:1.05em;font-weight:300}
-.main{max-width:780px;margin:0 auto;padding:0 20px 40px}
-.card{background:#0d1117;border:1px solid #21262d;border-radius:12px;padding:24px;margin-bottom:20px}
-.card-title{font-size:.85em;text-transform:uppercase;letter-spacing:1.5px;color:#58a6ff;margin-bottom:14px;font-weight:600}
-.quick-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.chip{padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid #21262d;background:#161b22;color:#8b949e;transition:all .2s}
-.chip:hover{border-color:#58a6ff;color:#58a6ff;background:#0d1525}
-.chip.active{border-color:#58a6ff;color:#58a6ff;background:#0d1525}
-textarea{width:100%;height:130px;background:#0d1117;border:1px solid #21262d;border-radius:10px;color:#c9d1d9;padding:14px 16px;font-size:15px;resize:vertical;font-family:inherit;line-height:1.5;transition:border-color .2s}
-textarea:focus{outline:none;border-color:#58a6ff;box-shadow:0 0 0 3px rgba(88,166,255,.15)}
-textarea::placeholder{color:#484f58}
-.actions{display:flex;gap:10px;margin-top:14px}
-#go{flex:1;padding:12px 24px;border:none;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600;background:linear-gradient(135deg,#238636,#2ea043);color:#fff;transition:all .25s;box-shadow:0 2px 8px rgba(35,134,54,.3)}
-#go:hover{box-shadow:0 4px 16px rgba(35,134,54,.5);transform:translateY(-1px)}
-#go:disabled{opacity:.5;cursor:wait;transform:none;box-shadow:none}
-.btn-sec{padding:12px 18px;border:1px solid #21262d;border-radius:10px;font-size:14px;cursor:pointer;font-weight:500;background:#161b22;color:#8b949e;transition:all .2s}
-.btn-sec:hover{border-color:#58a6ff;color:#c9d1d9}
-.btn-clr:hover{border-color:#f85149;color:#f85149}
-.result-wrap{display:none;animation:fadeUp .4s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.result-header h3{font-size:1.1em;color:#c9d1d9}
-.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px}
-.badge-ai{background:#0d2818;color:#3fb950;border:1px solid #238636}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#050a12;color:#c9d1d9;min-height:100vh;overflow-x:hidden}
+.bg-glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(56,139,253,.08) 0%,transparent 70%);pointer-events:none;z-index:0}
+.hero{position:relative;text-align:center;padding:50px 20px 35px;z-index:1}
+.logo-wrap{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#1a3a5c,#0d2240);border:1px solid #1f3d5f;margin-bottom:16px;font-size:36px}
+h1{font-size:2.2em;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#58a6ff,#79c0ff,#a5d6ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:#7d8590;margin-top:8px;font-size:1.05em;font-weight:400;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.5}
+.main{position:relative;max-width:820px;margin:0 auto;padding:0 20px 50px;z-index:1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:linear-gradient(135deg,#0d1117,#111820);border:1px solid #1b2430;border-radius:14px;padding:20px 16px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.stat:hover{border-color:#30363d;transform:translateY(-2px)}.stat:hover::before{opacity:1}
+.stat-icon{font-size:30px;margin-bottom:10px;display:block}
+.stat-label{font-size:.82em;color:#7d8590;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.stat:nth-child(1){--accent:#58a6ff}
+.stat:nth-child(2){--accent:#f78166}
+.stat:nth-child(3){--accent:#3fb950}
+.stat:nth-child(4){--accent:#d2a8ff}
+.card{background:#0d1117;border:1px solid #1b2430;border-radius:16px;padding:28px;margin-bottom:20px;position:relative}
+.card-glow{position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,#58a6ff33,transparent)}
+.card-title{font-size:.8em;text-transform:uppercase;letter-spacing:2px;color:#58a6ff;margin-bottom:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';width:8px;height:8px;border-radius:50%;background:#58a6ff;display:inline-block;box-shadow:0 0 8px #58a6ff55}
+.quick-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:7px 16px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid #21262d;background:#161b22;color:#7d8590;transition:all .25s;user-select:none}
+.chip:hover{border-color:#388bfd;color:#58a6ff;background:#0c2d6b22;box-shadow:0 0 12px #388bfd15}
+.chip:active{transform:scale(.96)}
+textarea{width:100%;height:120px;background:#080d16;border:1px solid #1b2430;border-radius:12px;color:#c9d1d9;padding:16px 18px;font-size:15px;resize:vertical;font-family:inherit;line-height:1.6;transition:all .25s}
+textarea:focus{outline:none;border-color:#388bfd;box-shadow:0 0 0 3px rgba(56,139,253,.12),0 4px 20px rgba(56,139,253,.08)}
+textarea::placeholder{color:#3d444d}
+.actions{display:flex;gap:10px;margin-top:16px}
+#go{flex:1;padding:13px 28px;border:none;border-radius:12px;font-size:15px;cursor:pointer;font-weight:700;background:linear-gradient(135deg,#238636,#2ea043,#3fb950);color:#fff;transition:all .3s;box-shadow:0 4px 14px rgba(35,134,54,.25);position:relative;overflow:hidden}
+#go::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);transition:left .5s}
+#go:hover{box-shadow:0 6px 24px rgba(35,134,54,.4);transform:translateY(-2px)}
+#go:hover::after{left:100%}
+#go:disabled{opacity:.4;cursor:wait;transform:none;box-shadow:none}
+.btn-sec{padding:13px 20px;border:1px solid #21262d;border-radius:12px;font-size:14px;cursor:pointer;font-weight:600;background:#161b22;color:#7d8590;transition:all .25s}
+.btn-sec:hover{border-color:#388bfd;color:#c9d1d9;background:#1a2332}
+.btn-clr:hover{border-color:#f85149;color:#f85149;background:#2a1216}
+.hint{font-size:12.5px;color:#3d444d;margin-top:12px;display:flex;align-items:center;gap:6px}
+.hint kbd{background:#161b22;border:1px solid #21262d;border-radius:5px;padding:2px 7px;font-size:11px;color:#7d8590;font-family:inherit}
+.result-wrap{display:none;animation:fadeUp .5s cubic-bezier(.16,1,.3,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.result-card{background:#0d1117;border:1px solid #1b2430;border-radius:16px;overflow:hidden}
+.result-bar{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:linear-gradient(135deg,#0d1525,#101820);border-bottom:1px solid #1b2430}
+.result-bar h3{font-size:1.05em;color:#c9d1d9;font-weight:700;display:flex;align-items:center;gap:8px}
+.result-bar h3::before{content:'';width:10px;height:10px;border-radius:3px;display:inline-block}
+.badge{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.badge-ai{background:#0d2818;color:#3fb950;border:1px solid #238636;box-shadow:0 0 12px #23863622}
 .badge-local{background:#2a1f00;color:#d29922;border:1px solid #9e6a03}
-#out{background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:20px;white-space:pre-wrap;font-family:'SF Mono','Cascadia Code','Fira Code',monospace;font-size:13.5px;line-height:1.7;color:#b1bac4;overflow-x:auto;max-height:600px;overflow-y:auto}
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
-.feat{background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:18px;text-align:center;transition:border-color .2s}
-.feat:hover{border-color:#21262d}
-.feat-icon{font-size:28px;margin-bottom:8px}
-.feat-label{font-size:.9em;color:#8b949e;font-weight:500}
-.help-text{font-size:13px;color:#484f58;margin-top:10px;line-height:1.5}
-.help-text kbd{background:#161b22;border:1px solid #21262d;border-radius:4px;padding:1px 6px;font-size:12px;color:#8b949e}
-.load{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:8px}
-@keyframes spin{to{transform:rotate(360deg)}}
-footer{text-align:center;padding:30px 20px;color:#30363d;font-size:13px;border-top:1px solid #161b22}
-footer a{color:#484f58;text-decoration:none}
-@media(max-width:600px){
-h1{font-size:1.5em}
-.features{grid-template-columns:1fr 1fr}
+#out{padding:22px 24px;white-space:pre-wrap;font-family:'JetBrains Mono','SF Mono','Cascadia Code','Fira Code',monospace;font-size:13px;line-height:1.8;color:#adbac7;max-height:550px;overflow-y:auto;scroll-behavior:smooth}
+#out::-webkit-scrollbar{width:6px}
+#out::-webkit-scrollbar-track{background:transparent}
+#out::-webkit-scrollbar-thumb{background:#21262d;border-radius:3px}
+#out::-webkit-scrollbar-thumb:hover{background:#30363d}
+.progress{height:3px;background:#161b22;border-radius:2px;overflow:hidden;margin:0 24px 0}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#238636,#58a6ff);border-radius:2px;transition:width .3s}
+.progress.active .progress-bar{animation:loading 2s ease-in-out infinite}
+@keyframes loading{0%{width:0}50%{width:80%}100%{width:100%}}
+footer{text-align:center;padding:35px 20px;color:#21262d;font-size:13px;z-index:1;position:relative}
+footer span{color:#30363d}
+@media(max-width:640px){
+h1{font-size:1.6em}
+.stats{grid-template-columns:1fr 1fr}
 .actions{flex-wrap:wrap}
 #go{min-width:100%}
+.card{padding:20px}
+.result-bar{padding:14px 18px}
+#out{padding:16px 18px}
 }
 </style>
 </head>
 <body>
+<div class="bg-glow"></div>
 <div class="hero">
-<div class="logo">📊</div>
-<h1>Smart Budget <span>Forecast</span></h1>
-<p class="sub">AI-powered expense prediction, savings trends & financial risk analysis</p>
+<div class="logo-wrap">📊</div>
+<h1>Smart Budget Forecast</h1>
+<p class="sub">Predict future expenses, analyze savings trends, and uncover financial risks with AI</p>
 </div>
 <div class="main">
-<div class="features">
-<div class="feat"><div class="feat-icon">📈</div><div class="feat-label">6-Month Forecast</div></div>
-<div class="feat"><div class="feat-icon">⚠️</div><div class="feat-label">Risk Analysis</div></div>
-<div class="feat"><div class="feat-icon">💰</div><div class="feat-label">Savings Trends</div></div>
-<div class="feat"><div class="feat-icon">🎯</div><div class="feat-label">Smart Tips</div></div>
+<div class="stats">
+<div class="stat"><span class="stat-icon">📈</span><span class="stat-label">6-Month Forecast</span></div>
+<div class="stat"><span class="stat-icon">⚠️</span><span class="stat-label">Risk Analysis</span></div>
+<div class="stat"><span class="stat-icon">💰</span><span class="stat-label">Savings Trends</span></div>
+<div class="stat"><span class="stat-icon">🎯</span><span class="stat-label">Smart Tips</span></div>
 </div>
 <div class="card">
-<div class="card-title">Enter Your Budget</div>
+<div class="card-glow"></div>
+<div class="card-title">Budget Input</div>
 <div class="quick-chips">
 <div class="chip" onclick="addChip('income: 5000')">+ Income</div>
 <div class="chip" onclick="addChip('rent: 1500')">+ Rent</div>
 <div class="chip" onclick="addChip('food: 600')">+ Food</div>
 <div class="chip" onclick="addChip('transport: 200')">+ Transport</div>
 <div class="chip" onclick="addChip('utilities: 150')">+ Utilities</div>
-<div class="chip" onclick="addChip('savings: 500')">+ Savings</div>
+<div class="chip" onclick="addChip('insurance: 200')">+ Insurance</div>
+<div class="chip" onclick="addChip('groceries: 400')">+ Groceries</div>
+<div class="chip" onclick="addChip('entertainment: 300')">+ Entertainment</div>
 </div>
-<textarea id="inp" placeholder="Type your budget items...&#10;&#10;Format: category: amount&#10;Example: income: 5000, rent: 1500, food: 600, transport: 200"></textarea>
+<textarea id="inp" placeholder="Enter your budget items here...&#10;&#10;Format: category: amount&#10;Example: income: 5000, rent: 1500, food: 600"></textarea>
 <div class="actions">
-<button id="go" onclick="run()">&#9654; Analyze Budget</button>
+<button id="go" onclick="run()">&#9654;&ensp;Analyze Budget</button>
 <button class="btn-sec" onclick="fill()">Try Example</button>
 <button class="btn-sec btn-clr" onclick="clr()">Clear</button>
 </div>
-<div class="help-text">Tip: Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to analyze quickly</div>
+<div class="hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to analyze</div>
 </div>
 <div class="result-wrap" id="rw">
-<div class="card">
-<div class="result-header">
+<div class="result-card">
+<div class="result-bar">
 <h3>Forecast Results</h3>
 <span class="badge" id="badge"></span>
 </div>
+<div class="progress" id="prog"><div class="progress-bar"></div></div>
 <div id="out"></div>
 </div>
 </div>
 </div>
-<footer>Smart Budget Forecast &mdash; Deterministic + AI Forecasting</footer>
+<footer>Smart Budget Forecast <span>&bull;</span> AI + Deterministic Engine</footer>
 <script>
 const API=window.location.origin;
 function addChip(val){
@@ -107,27 +132,39 @@ t.value=cur?(cur+", "+val):val;
 t.focus();
 }
 async function run(){
-const inp=document.getElementById("inp"),out=document.getElementById("out"),btn=document.getElementById("go"),rw=document.getElementById("rw"),badge=document.getElementById("badge");
+const inp=document.getElementById("inp"),out=document.getElementById("out"),btn=document.getElementById("go"),rw=document.getElementById("rw"),badge=document.getElementById("badge"),prog=document.getElementById("prog");
 const v=inp.value.trim();
 btn.disabled=true;
 btn.innerHTML='<span class="load"></span>Analyzing...';
 rw.style.display="block";
-out.textContent="Crunching your numbers...";
+out.textContent="";
 badge.textContent="";
 badge.className="badge";
+prog.classList.add("active");
 try{
 const r=await fetch(API+"/solve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:v})});
 const d=await r.json();
-out.textContent=d.output;
+prog.classList.remove("active");
+prog.querySelector(".progress-bar").style.width="100%";
+await typeOut(out,d.output);
 if(d.output.length>300){badge.textContent="AI POWERED";badge.classList.add("badge-ai");}
 else{badge.textContent="LOCAL";badge.classList.add("badge-local");}
-}catch(e){out.textContent="Connection error. Please try again.";badge.textContent="ERROR";badge.classList.add("badge-local");}
+}catch(e){prog.classList.remove("active");out.textContent="Connection error. Please try again.";badge.textContent="ERROR";badge.classList.add("badge-local");}
 btn.disabled=false;
-btn.innerHTML="&#9654; Analyze Budget";
+btn.innerHTML="&#9654;&ensp;Analyze Budget";
 rw.scrollIntoView({behavior:"smooth",block:"start"});
 }
+async function typeOut(el,text){
+el.textContent="";
+const chunks=text.split("\n");
+for(let i=0;i<chunks.length;i++){
+el.textContent+=(i>0?"\n":"")+chunks[i];
+el.scrollTop=el.scrollHeight;
+await new Promise(r=>setTimeout(r,25));
+}
+}
 function fill(){document.getElementById("inp").value="income: 5000, rent: 1500, food: 600, transport: 200, entertainment: 300, utilities: 150, insurance: 200, subscriptions: 50, groceries: 400";}
-function clr(){document.getElementById("inp").value="";document.getElementById("rw").style.display="none";}
+function clr(){document.getElementById("inp").value="";document.getElementById("rw").style.display="none";document.getElementById("prog").classList.remove("active");document.getElementById("prog").querySelector(".progress-bar").style.width="0";}
 document.getElementById("inp").addEventListener("keydown",function(e){if(e.ctrlKey&&e.key==="Enter")run();});
 </script>
 </body>
