@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Budget Forecast</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#060b14;color:#c9d1d9;min-height:100vh}
+.hero{text-align:center;padding:40px 20px 30px;background:linear-gradient(180deg,#0d1525 0%,#060b14 100%)}
+.logo{font-size:42px;margin-bottom:8px}
+h1{font-size:2em;color:#58a6ff;font-weight:700;letter-spacing:-0.5px}
+h1 span{color:#4fc3f7}
+.sub{color:#8b949e;margin-top:6px;font-size:1.05em;font-weight:300}
+.main{max-width:780px;margin:0 auto;padding:0 20px 40px}
+.card{background:#0d1117;border:1px solid #21262d;border-radius:12px;padding:24px;margin-bottom:20px}
+.card-title{font-size:.85em;text-transform:uppercase;letter-spacing:1.5px;color:#58a6ff;margin-bottom:14px;font-weight:600}
+.quick-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid #21262d;background:#161b22;color:#8b949e;transition:all .2s}
+.chip:hover{border-color:#58a6ff;color:#58a6ff;background:#0d1525}
+.chip.active{border-color:#58a6ff;color:#58a6ff;background:#0d1525}
+textarea{width:100%;height:130px;background:#0d1117;border:1px solid #21262d;border-radius:10px;color:#c9d1d9;padding:14px 16px;font-size:15px;resize:vertical;font-family:inherit;line-height:1.5;transition:border-color .2s}
+textarea:focus{outline:none;border-color:#58a6ff;box-shadow:0 0 0 3px rgba(88,166,255,.15)}
+textarea::placeholder{color:#484f58}
+.actions{display:flex;gap:10px;margin-top:14px}
+#go{flex:1;padding:12px 24px;border:none;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600;background:linear-gradient(135deg,#238636,#2ea043);color:#fff;transition:all .25s;box-shadow:0 2px 8px rgba(35,134,54,.3)}
+#go:hover{box-shadow:0 4px 16px rgba(35,134,54,.5);transform:translateY(-1px)}
+#go:disabled{opacity:.5;cursor:wait;transform:none;box-shadow:none}
+.btn-sec{padding:12px 18px;border:1px solid #21262d;border-radius:10px;font-size:14px;cursor:pointer;font-weight:500;background:#161b22;color:#8b949e;transition:all .2s}
+.btn-sec:hover{border-color:#58a6ff;color:#c9d1d9}
+.btn-clr:hover{border-color:#f85149;color:#f85149}
+.result-wrap{display:none;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.result-header h3{font-size:1.1em;color:#c9d1d9}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px}
+.badge-ai{background:#0d2818;color:#3fb950;border:1px solid #238636}
+.badge-local{background:#2a1f00;color:#d29922;border:1px solid #9e6a03}
+#out{background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:20px;white-space:pre-wrap;font-family:'SF Mono','Cascadia Code','Fira Code',monospace;font-size:13.5px;line-height:1.7;color:#b1bac4;overflow-x:auto;max-height:600px;overflow-y:auto}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
+.feat{background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:18px;text-align:center;transition:border-color .2s}
+.feat:hover{border-color:#21262d}
+.feat-icon{font-size:28px;margin-bottom:8px}
+.feat-label{font-size:.9em;color:#8b949e;font-weight:500}
+.help-text{font-size:13px;color:#484f58;margin-top:10px;line-height:1.5}
+.help-text kbd{background:#161b22;border:1px solid #21262d;border-radius:4px;padding:1px 6px;font-size:12px;color:#8b949e}
+.load{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+footer{text-align:center;padding:30px 20px;color:#30363d;font-size:13px;border-top:1px solid #161b22}
+footer a{color:#484f58;text-decoration:none}
+@media(max-width:600px){
+h1{font-size:1.5em}
+.features{grid-template-columns:1fr 1fr}
+.actions{flex-wrap:wrap}
+#go{min-width:100%}
+}
+</style>
+</head>
+<body>
+<div class="hero">
+<div class="logo">📊</div>
+<h1>Smart Budget <span>Forecast</span></h1>
+<p class="sub">AI-powered expense prediction, savings trends & financial risk analysis</p>
+</div>
+<div class="main">
+<div class="features">
+<div class="feat"><div class="feat-icon">📈</div><div class="feat-label">6-Month Forecast</div></div>
+<div class="feat"><div class="feat-icon">⚠️</div><div class="feat-label">Risk Analysis</div></div>
+<div class="feat"><div class="feat-icon">💰</div><div class="feat-label">Savings Trends</div></div>
+<div class="feat"><div class="feat-icon">🎯</div><div class="feat-label">Smart Tips</div></div>
+</div>
+<div class="card">
+<div class="card-title">Enter Your Budget</div>
+<div class="quick-chips">
+<div class="chip" onclick="addChip('income: 5000')">+ Income</div>
+<div class="chip" onclick="addChip('rent: 1500')">+ Rent</div>
+<div class="chip" onclick="addChip('food: 600')">+ Food</div>
+<div class="chip" onclick="addChip('transport: 200')">+ Transport</div>
+<div class="chip" onclick="addChip('utilities: 150')">+ Utilities</div>
+<div class="chip" onclick="addChip('savings: 500')">+ Savings</div>
+</div>
+<textarea id="inp" placeholder="Type your budget items...&#10;&#10;Format: category: amount&#10;Example: income: 5000, rent: 1500, food: 600, transport: 200"></textarea>
+<div class="actions">
+<button id="go" onclick="run()">&#9654; Analyze Budget</button>
+<button class="btn-sec" onclick="fill()">Try Example</button>
+<button class="btn-sec btn-clr" onclick="clr()">Clear</button>
+</div>
+<div class="help-text">Tip: Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to analyze quickly</div>
+</div>
+<div class="result-wrap" id="rw">
+<div class="card">
+<div class="result-header">
+<h3>Forecast Results</h3>
+<span class="badge" id="badge"></span>
+</div>
+<div id="out"></div>
+</div>
+</div>
+</div>
+<footer>Smart Budget Forecast &mdash; Deterministic + AI Forecasting</footer>
+<script>
+const API=window.location.origin;
+function addChip(val){
+const t=document.getElementById("inp");
+const cur=t.value.trim();
+t.value=cur?(cur+", "+val):val;
+t.focus();
+}
+async function run(){
+const inp=document.getElementById("inp"),out=document.getElementById("out"),btn=document.getElementById("go"),rw=document.getElementById("rw"),badge=document.getElementById("badge");
+const v=inp.value.trim();
+btn.disabled=true;
+btn.innerHTML='<span class="load"></span>Analyzing...';
+rw.style.display="block";
+out.textContent="Crunching your numbers...";
+badge.textContent="";
+badge.className="badge";
+try{
+const r=await fetch(API+"/solve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:v})});
+const d=await r.json();
+out.textContent=d.output;
+if(d.output.length>300){badge.textContent="AI POWERED";badge.classList.add("badge-ai");}
+else{badge.textContent="LOCAL";badge.classList.add("badge-local");}
+}catch(e){out.textContent="Connection error. Please try again.";badge.textContent="ERROR";badge.classList.add("badge-local");}
+btn.disabled=false;
+btn.innerHTML="&#9654; Analyze Budget";
+rw.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function fill(){document.getElementById("inp").value="income: 5000, rent: 1500, food: 600, transport: 200, entertainment: 300, utilities: 150, insurance: 200, subscriptions: 50, groceries: 400";}
+function clr(){document.getElementById("inp").value="";document.getElementById("rw").style.display="none";}
+document.getElementById("inp").addEventListener("keydown",function(e){if(e.ctrlKey&&e.key==="Enter")run();});
+</script>
+</body>
+</html>
